@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Entornos virtuales y variables de entorno
+.venv/
+venv/
+env/
+.env
+.env.*
+!.env.example
+
+# VS Code: compartir configuraciones solo si el equipo acuerda versionarlas
+.vscode/*
+!.vscode/extensions.json
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Datos locales/privados y bases de datos
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+*.db
+*.sqlite
+*.sqlite3
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
