@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/static/styles.css">
+        <title>Barbería</title>
+    </head>
+    <body>
+       <header>
+            <h1>Bienvenido a nuestra barbería</h1>
+            <p>Descubre nuestros servicios.</p>
+       </header> 
+       
+
+    <!-- Botón flotante para abrir el chat -->
+    <button id="chat-toggle" class="chat-toggle" 
+            aria-label="Abrir asistente" aria-expanded="false">
+        <span id="chat-toggle-icon">💬</span>
+    </button>
+    
+    <!-- Ventana del chat -->
+    <section id="chat-window" class="chat-window" 
+         aria-label="Asistente de barbería" hidden>
+
+    <header class="chat-header">
+        <div>
+            <h2>Asistente de barbería</h2>
+            <p>¿En qué podemos ayudarte?</p>
+        </div>
+
+        <button id="chat-close" class="chat-close"
+                aria-label="Cerrar chat">✕</button>
+    </header>
+
+    <div id="chat-messages" class="chat-messages" aria-live="polite">
+        <div class="message bot-message">
+            ¡Hola! 👋 Bienvenido a nuestra barbería.
+            ¿Quieres consultar nuestros servicios o reservar una cita?
+        </div>
+    </div>
+
+    <form id="chat-form" class="chat-form">
+        <input
+            type="text"
+            id="chat-input"
+            placeholder="Escribe tu mensaje..."
+            autocomplete="off"
+            aria-label="Escribe tu mensaje"
+            required
+        >
+        <button type="submit" aria-label="Enviar mensaje">➤</button>
+    </form>
+
+    </section>
+
+    <script src="/static/script.js"></script>
+
+    </body>
+</html>
