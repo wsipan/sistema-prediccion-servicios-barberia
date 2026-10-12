@@ -31,6 +31,7 @@ python-dateutil==2.9.0.post0
 python-dotenv==1.2.4
 pytz==2026.5
 PyYAML==6.0.3
+pwdlib[argon2]
 scikit-learn==1.9.1
 scipy==1.18.1
 six==1.17.0

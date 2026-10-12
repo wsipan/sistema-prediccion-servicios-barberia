@@ -12,6 +12,44 @@
             <p>Descubre nuestros servicios.</p>
        </header> 
        
+       <section class="registro">
+        <h2>Regístrate como cliente</h2>
+        <p>Registra tus datos para poder reservar una cita.</p>
+
+        <form id="registro-form">
+            <label for="registro-nombre">Nombre completo</label>
+            <input
+                type="text"
+                id="registro-nombre"
+                name="nombre"
+                maxlength="100"
+                autocomplete="name"
+                required
+            >
+
+            <label for="registro-telefono">Teléfono</label>
+            <input
+                type="tel"
+                id="registro-telefono"
+                name="telefono"
+                maxlength="20"
+                autocomplete="tel"
+                required
+            >
+
+            <label for="registro-correo">Correo electrónico (opcional)</label>
+            <input
+                type="email"
+                id="registro-correo"
+                name="correo"
+                autocomplete="email"
+            >
+
+            <button type="submit">Registrarme</button>
+            <p id="registro-mensaje" role="status" aria-live="polite"></p>
+        </form>
+    </section>
+       
 
     <!-- Botón flotante para abrir el chat -->
     <button id="chat-toggle" class="chat-toggle" 

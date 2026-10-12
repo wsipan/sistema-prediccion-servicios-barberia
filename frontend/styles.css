@@ -180,3 +180,43 @@ p {
         height: min(460px, calc(100dvh - 112px));
     }
 }
+
+.registro {
+    max-width: 420px;
+    margin: 32px auto;
+    padding: 24px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+}
+
+.registro form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.registro input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+    font: inherit;
+}
+
+.registro button {
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font: inherit;
+}
+
+.registro button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+#registro-mensaje {
+    overflow-wrap: anywhere;
+}

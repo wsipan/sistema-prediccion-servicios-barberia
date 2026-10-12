@@ -1,4 +1,3 @@
-
 const chatToggle = document.getElementById("chat-toggle");
 const chatWindow = document.getElementById("chat-window");
 const chatClose = document.getElementById("chat-close");
@@ -151,5 +150,65 @@ chatForm.addEventListener("submit", async (event) => {
     } finally {
         chatInput.disabled = false;
         chatInput.focus();
+    }
+});
+
+// Registro de clientes
+const registroForm = document.getElementById("registro-form");
+const registroMensaje = document.getElementById("registro-mensaje");
+
+registroForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const boton = registroForm.querySelector(
+        'button[type="submit"]'
+    );
+
+    const datos = {
+        nombre: document.getElementById("registro-nombre").value.trim(),
+        telefono: document.getElementById("registro-telefono").value.trim(),
+        correo: document.getElementById("registro-correo").value.trim()
+    };
+
+    if (!datos.correo) {
+        datos.correo = null;
+    }
+
+    boton.disabled = true;
+    registroMensaje.textContent = "Registrando cliente...";
+
+    try {
+        const response = await fetch("/api/clientes", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(datos)
+        });
+
+        const resultado = await response.json();
+
+        if (!response.ok) {
+            if (response.status === 409) {
+                throw new Error(
+                    "Este teléfono ya está registrado."
+                );
+            }
+
+            throw new Error(
+                resultado.detail || "No se pudo completar el registro."
+            );
+        }
+
+        registroMensaje.textContent =
+            "¡Registro exitoso! Ya puedes continuar con tu reserva.";
+
+        registroForm.reset();
+
+    } catch (error) {
+        registroMensaje.textContent = error.message;
+
+    } finally {
+        boton.disabled = false;
     }
 });
