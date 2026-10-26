@@ -1,98 +1,260 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="/static/styles.css">
-        <title>Barbería</title>
-    </head>
-    <body>
-       <header>
-            <h1>Bienvenido a nuestra barbería</h1>
-            <p>Descubre nuestros servicios.</p>
-       </header> 
-       
-       <section class="registro">
-        <h2>Regístrate como cliente</h2>
-        <p>Registra tus datos para poder reservar una cita.</p>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barbería | Estilo y cuidado</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="/static/script.js" defer></script>
+</head>
+<body>
+    <header class="site-header">
+        <a href="/" class="brand">
+            <span class="brand-mark">B</span>
+            <span>
+                BARBERÍA
+                <small>ESTILO Y CUIDADO</small>
+            </span>
+        </a>
 
-        <form id="registro-form">
-            <label for="registro-nombre">Nombre completo</label>
-            <input
-                type="text"
-                id="registro-nombre"
-                name="nombre"
-                maxlength="100"
-                autocomplete="name"
-                required
-            >
-
-            <label for="registro-telefono">Teléfono</label>
-            <input
-                type="tel"
-                id="registro-telefono"
-                name="telefono"
-                maxlength="20"
-                autocomplete="tel"
-                required
-            >
-
-            <label for="registro-correo">Correo electrónico (opcional)</label>
-            <input
-                type="email"
-                id="registro-correo"
-                name="correo"
-                autocomplete="email"
-            >
-
-            <button type="submit">Registrarme</button>
-            <p id="registro-mensaje" role="status" aria-live="polite"></p>
-        </form>
-    </section>
-       
-
-    <!-- Botón flotante para abrir el chat -->
-    <button id="chat-toggle" class="chat-toggle" 
-            aria-label="Abrir asistente" aria-expanded="false">
-        <span id="chat-toggle-icon">💬</span>
-    </button>
-    
-    <!-- Ventana del chat -->
-    <section id="chat-window" class="chat-window" 
-         aria-label="Asistente de barbería" hidden>
-
-    <header class="chat-header">
-        <div>
-            <h2>Asistente de barbería</h2>
-            <p>¿En qué podemos ayudarte?</p>
-        </div>
-
-        <button id="chat-close" class="chat-close"
-                aria-label="Cerrar chat">✕</button>
+        <nav class="nav-actions">
+            <button id="nav-login" class="button button-quiet" type="button">
+                Iniciar sesión
+            </button>
+            <button id="nav-register" class="button button-gold" type="button">
+                Crear cuenta
+            </button>
+            <span id="user-greeting" hidden></span>
+            <button id="nav-logout" class="button button-quiet" type="button" hidden>
+                Cerrar sesión
+            </button>
+        </nav>
     </header>
 
-    <div id="chat-messages" class="chat-messages" aria-live="polite">
-        <div class="message bot-message">
-            ¡Hola! 👋 Bienvenido a nuestra barbería.
-            ¿Quieres consultar nuestros servicios o reservar una cita?
+    <main>
+        <section class="hero">
+            <div class="hero-copy">
+                <p class="eyebrow">TU ESTILO EMPIEZA AQUÍ</p>
+                <h1>Un buen corte.<br>
+                    <span>Una gran versión de ti.</span>
+                </h1>
+                <p class="hero-description">
+                    Descubre nuestros servicios, resuelve tus dudas con el
+                    asistente virtual y prepárate para tu próxima visita.
+                </p>
+
+                <div class="hero-actions">
+                    <button id="hero-register" class="button button-gold button-large"
+                            type="button">
+                        Crear mi cuenta
+                    </button>
+                    <button id="hero-chat" class="button button-outline button-large"
+                            type="button">
+                        Hablar con el asistente
+                    </button>
+                </div>
+
+                <p class="hero-note">
+                    <span class="status-dot"></span>
+                    Puedes consultar información sin iniciar sesión.
+                </p>
+            </div>
+
+            <div class="hero-art" aria-hidden="true">
+                <div class="art-ring"></div>
+                <div class="art-panel">
+                    <span class="art-small">TRADICIÓN · DETALLE · ESTILO</span>
+                    <span class="art-big">THE<br>BARBER<br>
+                        <em>CLUB</em>
+                    </span>
+                    <span class="art-line"></span>
+                    <span class="art-footer">DESDE EL PRIMER CORTE</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="services">
+            <div class="section-heading">
+                <p class="eyebrow">LO QUE HACEMOS</p>
+                <h2>Tu próximo look comienza aquí</h2>
+                <p>Consulta al asistente para obtener información sobre nuestros servicios.</p>
+            </div>
+
+            <div class="service-grid">
+                <article class="service-card">
+                    <span class="service-number">01</span>
+                    <span class="service-icon">✂</span>
+                    <h3>Cortes</h3>
+                    <p>Estilos clásicos y actuales adaptados a ti.</p>
+                </article>
+
+                <article class="service-card">
+                    <span class="service-number">02</span>
+                    <span class="service-icon">◈</span>
+                    <h3>Barba</h3>
+                    <p>Perfilado y cuidado para un acabado definido.</p>
+                </article>
+
+                <article class="service-card">
+                    <span class="service-number">03</span>
+                    <span class="service-icon">✧</span>
+                    <h3>Cuidado personal</h3>
+                    <p>Detalles que completan tu estilo.</p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <span>BARBERÍA</span>
+        <span>Estilo en cada detalle.</span>
+    </footer>
+
+    <!-- Botón flotante del chat -->
+    <button id="chat-toggle" class="chat-toggle" type="button"
+            aria-label="Abrir asistente" aria-expanded="false">
+        <span id="chat-toggle-icon">✦</span>
+    </button>
+
+    <!-- Ventana del chat -->
+    <section id="chat-window" class="chat-window"
+             aria-label="Asistente virtual" hidden>
+        <header class="chat-header">
+            <div class="chat-avatar">B</div>
+            <div class="chat-title">
+                <strong>Asistente de barbería</strong>
+                <span><i class="status-dot"></i> Disponible para consultas</span>
+            </div>
+            <button id="chat-close" class="icon-button" type="button"
+                    aria-label="Cerrar chat">×</button>
+        </header>
+
+        <div id="chat-messages" class="chat-messages" aria-live="polite">
+            <div class="message bot-message">
+                <p>
+                    ¡Hola! Puedo ayudarte con información sobre nuestros
+                    servicios. Si quieres reservar una cita, necesitarás
+                    iniciar sesión para continuar.
+                </p>
+            </div>
         </div>
-    </div>
 
-    <form id="chat-form" class="chat-form">
-        <input
-            type="text"
-            id="chat-input"
-            placeholder="Escribe tu mensaje..."
-            autocomplete="off"
-            aria-label="Escribe tu mensaje"
-            required
-        >
-        <button type="submit" aria-label="Enviar mensaje">➤</button>
-    </form>
+        <form id="chat-form" class="chat-form">
+            <label class="sr-only" for="chat-input">Escribe tu mensaje</label>
+            <input id="chat-input" name="message" type="text"
+                   placeholder="Escribe tu mensaje..."
+                   maxlength="1000" autocomplete="off" required>
+            <button type="submit" aria-label="Enviar mensaje">↑</button>
+        </form>
 
+        <p class="chat-disclaimer">
+            No compartas contraseñas en el chat.
+        </p>
     </section>
 
-    <script src="/static/script.js"></script>
+    <!-- Modal de registro e inicio de sesión -->
+    <div id="auth-overlay" class="auth-overlay" hidden>
+        <section class="auth-modal" role="dialog" aria-modal="true"
+                 aria-labelledby="auth-title">
 
-    </body>
+            <button id="auth-close" class="auth-close icon-button"
+                    type="button" aria-label="Cerrar ventana">×</button>
+
+            <div class="auth-brand">
+                <span class="brand-mark">B</span>
+                <span class="eyebrow">BIENVENIDO A BARBERÍA</span>
+            </div>
+
+            <h2 id="auth-title">Tu cuenta, tu estilo</h2>
+            <p class="auth-intro">
+                Accede para continuar con la gestión de tus citas.
+            </p>
+
+            <div class="auth-tabs">
+                <button id="show-login" class="auth-tab active"
+                        type="button" aria-selected="true">
+                    Iniciar sesión
+                </button>
+                <button id="show-register" class="auth-tab"
+                        type="button" aria-selected="false">
+                    Crear cuenta
+                </button>
+            </div>
+
+            <!-- Formulario de login -->
+            <form id="login-form" class="auth-form">
+                <label for="login-correo">Correo electrónico</label>
+                <input id="login-correo" name="correo" type="email"
+                       autocomplete="email" maxlength="254"
+                       placeholder="tu@correo.com" required>
+
+                <label for="login-password">Contraseña</label>
+                <input id="login-password" name="password" type="password"
+                       autocomplete="current-password" maxlength="128"
+                       placeholder="Tu contraseña" required>
+
+                <p id="login-message" class="form-message" role="status"></p>
+
+                <button class="button button-gold button-full" type="submit">
+                    Entrar a mi cuenta
+                </button>
+
+                <p class="form-switch">
+                    ¿No tienes cuenta?
+                    <button type="button" class="text-button"
+                            data-switch="register">Regístrate</button>
+                </p>
+            </form>
+
+            <!-- Formulario de registro -->
+            <form id="register-form" class="auth-form" hidden>
+                <label for="register-nombre">Nombre completo</label>
+                <input id="register-nombre" name="nombre" type="text"
+                       autocomplete="name" maxlength="100"
+                       placeholder="Tu nombre" required>
+
+                <label for="register-correo">Correo electrónico</label>
+                <input id="register-correo" name="correo" type="email"
+                       autocomplete="email" minlength="5" maxlength="254"
+                       placeholder="tu@correo.com" required>
+                <small class="field-note">
+                    Se utilizará para futuras notificaciones, cuando estén habilitadas.
+                </small>
+
+                <label for="register-telefono">Teléfono</label>
+                <input id="register-telefono" name="telefono" type="tel"
+                       autocomplete="tel" maxlength="20"
+                       placeholder="Tu número de teléfono" required>
+
+                <label for="register-password">Contraseña</label>
+                <input id="register-password" name="password" type="password"
+                       autocomplete="new-password" minlength="8" maxlength="128"
+                       placeholder="Mínimo 8 caracteres" required>
+
+                <label for="register-confirm-password">Confirmar contraseña</label>
+                <input id="register-confirm-password" name="confirm_password"
+                       type="password" autocomplete="new-password"
+                       minlength="8" maxlength="128"
+                       placeholder="Repite tu contraseña" required>
+
+                <p id="register-message" class="form-message" role="status"></p>
+
+                <button class="button button-gold button-full" type="submit">
+                    Crear mi cuenta
+                </button>
+
+                <p class="form-switch">
+                    ¿Ya tienes cuenta?
+                    <button type="button" class="text-button"
+                            data-switch="login">Inicia sesión</button>
+                </p>
+            </form>
+
+            <p class="auth-privacy">
+                Crear una cuenta no significa que los recordatorios por correo
+                estén activos. Esa función requiere configuración adicional.
+            </p>
+        </section>
+    </div>
+</body>
 </html>

@@ -9,7 +9,8 @@ DATABASE_PATH = PROJECT_ROOT / "barberia.db"
 
 def get_connection():
     """Abre una conexión con la base de datos."""
-    connection = sqlite3.connect(DATABASE_PATH)
+    connection = sqlite3.connect(DATABASE_PATH, timeout=10)
+    connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA foreign_keys = ON")
     return connection
 
