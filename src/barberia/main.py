@@ -15,6 +15,8 @@ from pwdlib import PasswordHash
 from itsdangerous import URLSafeTimedSerializer
 from itsdangerous.exc import BadSignature, SignatureExpired
 
+from .ml.predecir import predecir_servicio
+
 # Importar base de datos
 from .database import (
     buscar_cliente_por_correo,
@@ -22,7 +24,8 @@ from .database import (
     registrar_cliente,
     crear_cita,
     obtener_citas_cliente,
-    existe_cita_en_horario
+    existe_cita_en_horario,
+    obtener_historial_servicios_cliente
 )
 
 # Rutas del proyecto
@@ -386,3 +389,51 @@ def listar_mis_citas(request: Request):
     cliente = obtener_cliente_autenticado(request)
 
     return obtener_citas_cliente(cliente["id"])
+
+@app.get("/api/prediccion-servicio")
+def obtener_prediccion_servicio(request: Request):
+    """
+    Predice el próximo servicio probable del
+    cliente autenticado utilizando su historial.
+    """
+
+    cliente = obtener_cliente_autenticado(request)
+
+    historial = obtener_historial_servicios_cliente(
+        cliente["id"]
+    )
+
+    if len(historial) < 2:
+        return {
+            "prediccion_disponible": False,
+            "motivo": "Historial insuficiente",
+            "cantidad_citas_utilizadas": len(historial),
+        }
+
+    try:
+        resultado = predecir_servicio(
+            historial
+        )
+
+    except ValueError as error:
+        return {
+            "prediccion_disponible": False,
+            "motivo": str(error),
+            "cantidad_citas_utilizadas": len(historial),
+        }
+
+    return {
+        "prediccion_disponible": True,
+        "servicio_predicho": resultado[
+            "servicio_predicho"
+        ],
+        "probabilidad": resultado[
+            "probabilidad"
+        ],
+        "probabilidades": resultado[
+            "probabilidades"
+        ],
+        "cantidad_citas_utilizadas": resultado[
+            "cantidad_citas_utilizadas"
+        ],
+    }

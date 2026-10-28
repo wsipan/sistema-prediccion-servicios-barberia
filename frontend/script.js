@@ -33,9 +33,10 @@
     loginEmail: $("#login-correo"),
   };
 
-  let authenticated = false;
-  let pendingReservationMessage = null;
-  let sendingMessage = false;
+    let authenticated = false;
+    let pendingReservationMessage = null;
+    let pendingRecommendationMessage = null;
+    let sendingMessage = false;
 
   // Mostrar mensajes de error o éxito en los formularios.
   function setMessage(element, message = "", kind = "") {
@@ -174,6 +175,75 @@
     return /\b(reservar|reserva|reservas|agendar|agenda|cita|citas|disponibilidad)\b/i
       .test(message);
   }
+    
+  // Detectar consultas en las que el cliente pide una recomendación.
+    function isRecommendationIntent(message) {
+    return /\b(recomienda|recomiendas|recomendacion|recomendación|recomendar|sugiere|sugieres|sugerencia|preferencia|probable)\b/i
+        .test(message);
+    }
+
+    function getServiceDisplayName(service) {
+    const names = {
+        corte: "Corte de cabello",
+        barba: "Barba",
+        corte_barba: "Corte + barba",
+        corte_premium: "Corte premium",
+    };
+
+    return names[service] || service;
+    }
+
+async function requestServiceRecommendation() {
+  if (sendingMessage) return;
+
+  sendingMessage = true;
+
+  const submitButton =
+    elements.chatForm.querySelector("button[type='submit']");
+
+  submitButton.disabled = true;
+
+  try {
+    const data = await apiRequest(
+      "/api/prediccion-servicio"
+    );
+
+    if (!data.prediccion_disponible) {
+      addMessage(
+        data.motivo === "Historial insuficiente"
+          ? "Aún no tengo suficiente historial para recomendarte un servicio. Necesito al menos 2 servicios anteriores."
+          : `No pude generar una recomendación: ${data.motivo}`,
+        "bot"
+      );
+
+      return;
+    }
+
+    const serviceName = getServiceDisplayName(
+      data.servicio_predicho
+    );
+
+    const probability = Math.round(
+      data.probabilidad * 100
+    );
+
+    addMessage(
+      `Según tu historial, el servicio que probablemente prefieras es ${serviceName}. Mi estimación es de aproximadamente ${probability}% de probabilidad.`,
+      "bot"
+    );
+
+  } catch (error) {
+    addMessage(
+      `No pude obtener tu recomendación: ${error.message}`,
+      "bot"
+    );
+
+  } finally {
+    sendingMessage = false;
+    submitButton.disabled = false;
+    elements.chatInput.focus();
+  }
+}
 
   // Adaptarse al nombre del campo de respuesta del chatbot.
   function getChatReply(data) {
@@ -398,6 +468,18 @@
 
         await sendChatMessage(pending, false);
       }
+
+      // Recuperar una recomendación pendiente.
+    if (pendingRecommendationMessage) {
+    pendingRecommendationMessage = null;
+
+    addMessage(
+        "Ahora que has iniciado sesión, revisaré tu historial para generar una recomendación.",
+        "bot"
+    );
+
+    await requestServiceRecommendation();
+    }
     } catch (error) {
       setMessage(
         elements.loginMessage,
@@ -436,6 +518,32 @@
 
     elements.chatInput.value = "";
     openChat();
+
+    if (isRecommendationIntent(message)) {
+  addMessage(message, "user");
+
+  if (!authenticated) {
+    pendingRecommendationMessage = message;
+
+    addMessage(
+      "Para recomendarte un servicio según tu historial, primero inicia sesión o crea una cuenta. Mantendré tu consulta mientras te identificas.",
+      "bot"
+    );
+
+    openAuth("login");
+
+    setMessage(
+      elements.loginMessage,
+      "Inicia sesión para que pueda revisar tu historial y recomendarte un servicio.",
+      "success"
+    );
+
+    return;
+  }
+
+  await requestServiceRecommendation();
+  return;
+}
 
     // Si intenta reservar sin sesión, conservar el mensaje.
     if (isReservationIntent(message) && !authenticated) {

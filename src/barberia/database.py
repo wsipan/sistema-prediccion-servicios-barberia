@@ -166,6 +166,28 @@ def existe_cita_en_horario(fecha_hora):
 
         return cita is not None
 
+def obtener_historial_servicios_cliente(cliente_id):
+    """
+    Obtiene cronológicamente los servicios de las citas
+    válidas de un cliente para utilizarlos en el modelo ML.
+    """
+    with get_connection() as connection:
+        citas = connection.execute(
+            """
+            SELECT servicio
+            FROM citas
+            WHERE cliente_id = ?
+              AND estado IN ('pendiente', 'confirmada', 'completada')
+            ORDER BY fecha_hora ASC
+            """,
+            (cliente_id,)
+        ).fetchall()
+
+        return [
+            cita["servicio"]
+            for cita in citas
+        ]
+
 if __name__ == "__main__":
     init_db()
     print(f"Base de datos creada en: {DATABASE_PATH}")
