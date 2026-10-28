@@ -1,5 +1,6 @@
 import os
 import re
+from datetime import datetime
 
 import sqlite3
 from pathlib import Path
@@ -19,6 +20,9 @@ from .database import (
     buscar_cliente_por_correo,
     buscar_cliente_por_telefono,
     registrar_cliente,
+    crear_cita,
+    obtener_citas_cliente,
+    existe_cita_en_horario
 )
 
 # Rutas del proyecto
@@ -58,6 +62,11 @@ class RegistroCuentaRequest(BaseModel):
 class LoginRequest(BaseModel):
     correo: str = Field(min_length=5, max_length=254)
     password: str = Field(min_length=1, max_length=128)
+
+
+class CrearCitaRequest(BaseModel):
+    servicio: str = Field(min_length=1, max_length=100)
+    fecha_hora: datetime
 
 password_hasher = PasswordHash.recommended()
 
@@ -340,3 +349,40 @@ def cerrar_sesion(response: Response):
         path="/",
     )
     return {"mensaje": "Sesión cerrada correctamente."}
+
+@app.post("/api/citas", status_code=201)
+def crear_cita_endpoint(
+    datos: CrearCitaRequest,
+    request: Request
+):
+    cliente = obtener_cliente_autenticado(request)
+
+    ahora = datetime.now()
+
+    if datos.fecha_hora <= ahora:
+        raise HTTPException(
+            status_code=400,
+            detail="La fecha y hora de la cita deben ser futuras."
+        )
+
+    fecha_hora = datos.fecha_hora.isoformat()
+
+    if existe_cita_en_horario(fecha_hora):
+        raise HTTPException(
+            status_code=409,
+            detail="Ese horario ya se encuentra reservado."
+        )
+
+    cita = crear_cita(
+        cliente_id=cliente["id"],
+        servicio=datos.servicio,
+        fecha_hora=fecha_hora
+    )
+
+    return cita
+
+@app.get("/api/citas")
+def listar_mis_citas(request: Request):
+    cliente = obtener_cliente_autenticado(request)
+
+    return obtener_citas_cliente(cliente["id"])

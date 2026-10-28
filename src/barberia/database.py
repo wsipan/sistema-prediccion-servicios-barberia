@@ -84,7 +84,6 @@ def registrar_cliente(nombre, telefono, correo=None, password_hash=None):
         raise ValueError("El nombre y el teléfono son obligatorios.")
 
     with get_connection() as connection:
-        connection.row_factory = sqlite3.Row
 
         cursor = connection.execute(
             """
@@ -104,6 +103,68 @@ def registrar_cliente(nombre, telefono, correo=None, password_hash=None):
         ).fetchone()
 
         return dict(cliente)
+
+def crear_cita(cliente_id, servicio, fecha_hora):
+    """Crea una cita para un cliente y devuelve sus datos."""
+    servicio = servicio.strip()
+    fecha_hora = fecha_hora.strip()
+
+    if not servicio or not fecha_hora:
+        raise ValueError("El servicio y la fecha/hora son obligatorios.")
+
+    with get_connection() as connection:
+        cursor = connection.execute(
+            """
+            INSERT INTO citas (cliente_id, servicio, fecha_hora, estado)
+            VALUES (?, ?, ?, 'pendiente')
+            """,
+            (cliente_id, servicio, fecha_hora)
+        )
+
+        cita = connection.execute(
+            """
+            SELECT id, cliente_id, servicio, fecha_hora, estado, creado_en
+            FROM citas
+            WHERE id = ?
+            """,
+            (cursor.lastrowid,)
+        ).fetchone()
+
+        return dict(cita)
+
+
+def obtener_citas_cliente(cliente_id):
+    """Devuelve las citas de un cliente."""
+    with get_connection() as connection:
+        citas = connection.execute(
+            """
+            SELECT id, cliente_id, servicio, fecha_hora, estado, creado_en
+            FROM citas
+            WHERE cliente_id = ?
+            ORDER BY fecha_hora ASC
+            """,
+            (cliente_id,)
+        ).fetchall()
+
+        return [dict(cita) for cita in citas]
+
+def existe_cita_en_horario(fecha_hora):
+    """
+    Comprueba si ya existe una cita activa en la fecha y hora indicadas.
+    """
+    with get_connection() as connection:
+        cita = connection.execute(
+            """
+            SELECT id
+            FROM citas
+            WHERE fecha_hora = ?
+              AND estado IN ('pendiente', 'confirmada')
+            LIMIT 1
+            """,
+            (fecha_hora,)
+        ).fetchone()
+
+        return cita is not None
 
 if __name__ == "__main__":
     init_db()
